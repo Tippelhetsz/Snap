@@ -7,8 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class Rules {
 
-    private int numberOfDecks;
-    private MatchingRule matchingRule;
-    private int numberOfPlayers;
-    private int stoppingCondition;
+    private final int numberOfDecks;
+    private final MatchingRule matchingRule;
+    private final int numberOfPlayers;
+    private final int stoppingCondition;
 }
