@@ -9,6 +9,6 @@ public class Rules {
 
     private final int numberOfDecks;
     private final MatchingRule matchingRule;
-    private final int numberOfPlayers;
+    private int numberOfPlayers;
     private final int stoppingCondition;
 }

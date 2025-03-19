@@ -47,4 +47,16 @@ public class Game {
             this.players.add(player);
         }
     }
+
+    public void dealCardsToPlayers() {
+        final int cardsToDiscard = this.deck.size() % this.rules.getNumberOfPlayers();
+        for (int i = deck.size() - 1; i >= cardsToDiscard; i--) {
+            this.players.get(i % this.rules.getNumberOfPlayers())
+                    .addCardToHand(this.deck.get(i));
+        }
+    }
+
+    public void increaseRoundCounter() {
+        this.roundCounter++;
+    }
 }

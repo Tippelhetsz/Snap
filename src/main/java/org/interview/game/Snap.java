@@ -1,11 +1,14 @@
 package org.interview.game;
 
+import org.interview.validator.GameValidator;
+
 import java.util.Scanner;
 
 public class Snap {
 
     public void playSnap() {
         Game game = new Game();
+        GameValidator gameValidator = new GameValidator();
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to Snap!");
@@ -22,5 +25,27 @@ public class Snap {
         game.createRules(numberOfDecks, matchingRule, numberOfPlayers, stoppingCondition);
         game.createDeck();
         game.createPlayers();
+        game.dealCardsToPlayers();
+
+        boolean isGameRunning = true;
+
+        System.out.println(game.getPlayers().getFirst().getPlayerHand());
+        System.out.println(game.getPlayers().getLast().getPlayerHand());
+        while (isGameRunning) {
+            nextPlayerPlayCard(game);
+            gameValidator.validatePlayerHands(game);
+
+            if (game.getPlayers().size() == 1) {
+                System.out.println("Winner is Player " + game.getPlayers().getFirst().getPlayerNumber());
+               isGameRunning = false;
+            }
+
+            game.increaseRoundCounter();
+        }
+    }
+
+    private void nextPlayerPlayCard(Game game) {
+        int currentPlayer = game.getRoundCounter() % game.getRules().getNumberOfPlayers();
+        game.getPlayers().get(currentPlayer).playCardFromHand();
     }
 }
