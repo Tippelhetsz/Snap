@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'org.interview'
-version = '1.0-SNAPSHOT'
+version = '1.0'
 
 repositories {
     mavenCentral()
@@ -11,7 +11,7 @@ repositories {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.example.Main'
+        attributes 'Main-Class': 'org.interview.Main'
     }
 }
 
