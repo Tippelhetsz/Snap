@@ -59,4 +59,8 @@ public class Game {
     public void increaseRoundCounter() {
         this.roundCounter++;
     }
+
+    public int getNumberOfPlayers() {
+        return this.getRules().getNumberOfPlayers();
+    }
 }

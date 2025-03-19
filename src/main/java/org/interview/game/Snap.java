@@ -2,6 +2,7 @@ package org.interview.game;
 
 import org.interview.model.Card;
 import org.interview.model.Player;
+import org.interview.reader.InputReader;
 import org.interview.validator.GameValidator;
 
 import java.util.*;
@@ -11,18 +12,14 @@ public class Snap {
     public void playSnap() {
         Game game = new Game();
         GameValidator gameValidator = new GameValidator();
-
+        InputReader inputReader = new InputReader();
         Scanner scanner = new Scanner(System.in);
+
         System.out.println("Welcome to Snap!");
-        System.out.println("How many playing card decks to play");
-        final int numberOfDecks = Integer.parseInt(scanner.nextLine().trim());
-        System.out.println("Should cards be matched: on suit, value, or both.");
-        final String matchingRule = scanner.nextLine().trim().toUpperCase();
-        System.out.println("How many players are playing");
-        final int numberOfPlayers = Integer.parseInt(scanner.nextLine().trim());
-        System.out.println("After how many played cards should the game stop:");
-        System.out.println("(if game should run until there is only 1 player left, type 0)");
-        final int stoppingCondition = Integer.parseInt(scanner.nextLine().trim());
+        final int numberOfDecks = inputReader.getNumberOfDecks(scanner);
+        final String matchingRule = inputReader.getMatchingRule(scanner);
+        final int numberOfPlayers = inputReader.getNumberOfPlayers(scanner);
+        final int stoppingCondition = inputReader.getStoppingCondition(scanner);
 
         game.createRules(numberOfDecks, matchingRule, numberOfPlayers, stoppingCondition);
         game.createDeck();
@@ -31,8 +28,6 @@ public class Snap {
 
         boolean isGameRunning = true;
 
-        System.out.println(game.getPlayers().getFirst().getPlayerHand());
-        System.out.println(game.getPlayers().getLast().getPlayerHand());
         while (isGameRunning) {
             nextPlayerPlayCard(game);
 
@@ -42,17 +37,14 @@ public class Snap {
 
             gameValidator.validatePlayerHands(game);
 
-            if (game.getPlayers().size() == 1) {
-                System.out.println("Winner is Player " + game.getPlayers().getFirst().getPlayerNumber());
-               isGameRunning = false;
-            }
+            isGameRunning = gameValidator.validateGameState(game);
 
             game.increaseRoundCounter();
         }
     }
 
     private void nextPlayerPlayCard(Game game) {
-        int currentPlayer = game.getRoundCounter() % game.getRules().getNumberOfPlayers();
+        int currentPlayer = game.getRoundCounter() % game.getNumberOfPlayers();
         game.getPlayers().get(currentPlayer).playCardFromHand();
     }
 
@@ -63,7 +55,7 @@ public class Snap {
     }
 
     private void giveStacksToRandomPlayer(Game game, GameValidator validator, Card snapCard) {
-        int randomPlayer = new Random().nextInt(0, game.getRules().getNumberOfPlayers());
+        int randomPlayer = new Random().nextInt(0, game.getNumberOfPlayers());
         List<Card> stackOfCards = new ArrayList<>();
 
         for (Player player : game.getPlayers()) {

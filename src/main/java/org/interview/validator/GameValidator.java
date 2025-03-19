@@ -42,6 +42,20 @@ public class GameValidator {
         game.getRules().setNumberOfPlayers(game.getPlayers().size());
     }
 
+    public boolean validateGameState(Game game) {
+        if (game.getPlayers().size() == 1) {
+            System.out.println("Winner is Player " + game.getPlayers().getFirst().getPlayerNumber());
+            return false;
+        }
+
+        if ((game.getRoundCounter() + 1) >= game.getRules().getStoppingCondition()) {
+            System.out.printf("Reached end of the game. %d cards have been played\n", game.getRules().getStoppingCondition());
+            return false;
+        }
+
+        return true;
+    }
+
     private static List<Card> getTopCardsFromPlayersStack(List<Player> players) {
         return players.stream()
                 .map(Player::getStack)
