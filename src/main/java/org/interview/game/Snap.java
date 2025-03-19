@@ -1,8 +1,10 @@
 package org.interview.game;
 
+import org.interview.model.Card;
+import org.interview.model.Player;
 import org.interview.validator.GameValidator;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class Snap {
 
@@ -33,6 +35,11 @@ public class Snap {
         System.out.println(game.getPlayers().getLast().getPlayerHand());
         while (isGameRunning) {
             nextPlayerPlayCard(game);
+
+            Optional<Card> optSnapCard = gameValidator.isSnapPossible(game);
+
+            optSnapCard.ifPresent(card -> randomSnap(game, gameValidator, card));
+
             gameValidator.validatePlayerHands(game);
 
             if (game.getPlayers().size() == 1) {
@@ -47,5 +54,25 @@ public class Snap {
     private void nextPlayerPlayCard(Game game) {
         int currentPlayer = game.getRoundCounter() % game.getRules().getNumberOfPlayers();
         game.getPlayers().get(currentPlayer).playCardFromHand();
+    }
+
+    private void randomSnap(Game game, GameValidator validator, Card snapCard) {
+        if (new Random().nextInt(1, 10) % 3 == 0) {
+            giveStacksToRandomPlayer(game, validator, snapCard);
+        }
+    }
+
+    private void giveStacksToRandomPlayer(Game game, GameValidator validator, Card snapCard) {
+        int randomPlayer = new Random().nextInt(0, game.getRules().getNumberOfPlayers());
+        List<Card> stackOfCards = new ArrayList<>();
+
+        for (Player player : game.getPlayers()) {
+            if (!player.getStack().isEmpty() &&
+                    validator.isSnapAccordingToRules(game.getRules(), snapCard, player.getStack().getLast())) {
+                stackOfCards.addAll(player.removeStack());
+            }
+        }
+
+        game.getPlayers().get(randomPlayer).getPlayerHand().addAll(0, stackOfCards);
     }
 }

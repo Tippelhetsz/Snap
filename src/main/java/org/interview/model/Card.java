@@ -1,7 +1,9 @@
 package org.interview.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
 @AllArgsConstructor
 public class Card {
 

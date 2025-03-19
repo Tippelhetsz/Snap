@@ -29,4 +29,11 @@ public class Player {
     public boolean isHandEmpty() {
         return this.playerHand.isEmpty();
     }
+
+    public List<Card> removeStack() {
+        final var stack = this.stack;
+        this.stack = new ArrayList<>();
+
+        return stack;
+    }
 }
